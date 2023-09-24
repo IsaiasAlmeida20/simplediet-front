@@ -1,28 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-import Google from '@/assets/images/auth/social-google.svg';
-import { useAuthStore } from '@/stores/auth';
-import { Form } from 'vee-validate';
-
-const checkbox = ref(false);
-const valid = ref(false);
-const show1 = ref(false);
-//const logform = ref();
-const password = ref('admin123');
-const username = ref('info@codedthemes.com');
-const passwordRules = ref([
-  (v: string) => !!v || 'Password is required',
-  (v: string) => (v && v.length <= 10) || 'Password must be less than 10 characters'
-]);
-const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid']);
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function validate(values: any, { setErrors }: any) {
-  const authStore = useAuthStore();
-  return authStore.login(username.value, password.value).catch((error) => setErrors({ apiError: error }));
-}
-</script>
-
 <template>
   <!-- <v-btn block color="primary" variant="outlined" class="text-lightText googleBtn">
     <img :src="Google" alt="google" />
@@ -38,7 +13,7 @@ function validate(values: any, { setErrors }: any) {
   <h5 class="text-h5 text-center my-4 mb-8">Entrar com Email</h5> -->
   <Form @submit="validate" class="mt-7 loginForm" v-slot="{ errors, isSubmitting }">
     <v-text-field
-      v-model="username"
+      v-model="email"
       :rules="emailRules"
       label="Email"
       class="mt-4 mb-8"
@@ -64,15 +39,6 @@ function validate(values: any, { setErrors }: any) {
     ></v-text-field>
 
     <div class="d-sm-flex align-center mt-2 mb-7 mb-sm-0">
-      <!-- <v-checkbox
-        v-model="checkbox"
-        :rules="[(v: any) => !!v || 'You must agree to continue!']"
-        label="Remember me?"
-        required
-        color="primary"
-        class="ms-n2"
-        hide-details
-      ></v-checkbox> -->
       <div class="ml-auto">
         <a href="javascript:void(0)" class="text-primary text-decoration-none">Esqueceu sua senha?</a>
       </div>
@@ -88,6 +54,39 @@ function validate(values: any, { setErrors }: any) {
     <v-btn variant="plain" to="/auth/register" class="mt-2 text-capitalize mr-n2">Não possui conta?</v-btn>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import Google from '@/assets/images/auth/social-google.svg';
+import { useAuthStore } from '@/stores/auth';
+import { Form } from 'vee-validate';
+import request from '@/services/axios'
+
+const checkbox = ref(false);
+const valid = ref(false);
+const show1 = ref(false);
+//const logform = ref();
+const email = ref('isaias@example.com');
+const password = ref('badrequest');
+const passwordRules = ref([
+  (v: string) => !!v || 'Senha é obrigatoria',
+]);
+const emailRules = ref([
+  (v: string) => !!v || 'E-mail is required', 
+  (v: string) => /.+@.+\..+/.test(v) || 'E-mail precisa ser válido'
+]);
+
+async function validate() {
+  // const authStore = useAuthStore();
+  // return authStore.login(email.value, password.value).catch((error) => setErrors({ apiError: error }));
+  const response = await request.post('/account/login/', {
+    'email': email.value,
+    'password': password.value
+  })
+  console.log(response)
+}
+</script>
+
 <style lang="scss">
 .custom-devider {
   border-color: rgba(0, 0, 0, 0.08) !important;
