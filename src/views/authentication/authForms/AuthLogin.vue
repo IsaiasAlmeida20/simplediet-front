@@ -43,9 +43,9 @@
         <a href="javascript:void(0)" class="text-primary text-decoration-none">Esqueceu sua senha?</a>
       </div>
     </div>
-    <v-btn color="secondary" block class="mt-5" variant="flat" size="large" :disabled="valid" type="submit">
-      Entrar</v-btn
-    >
+    <v-btn color="secondary" block class="mt-5" variant="flat" size="large" :loading="loading" :disabled="valid" type="submit">
+      Entrar
+    </v-btn>
     <div v-if="hasError" class="mt-2">
       <v-alert color="error" closable @click:close="hasError = false">
         <span v-for="erro in apiError">
@@ -66,7 +66,7 @@ import Google from '@/assets/images/auth/social-google.svg';
 import { useAuthStore } from '@/stores/auth';
 
 const authStore = useAuthStore();
-const { hasError, apiError } = storeToRefs(authStore);
+const { hasError, apiError, loading } = storeToRefs(authStore);
 
 
 const checkbox = ref(false);

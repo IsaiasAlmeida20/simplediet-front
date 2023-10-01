@@ -14,18 +14,21 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<User>()
   const returnUrl = ref<string | null>()
   const hasError = ref(false)
+  const loading = ref(false)
   const apiError = ref()
 
   const login = async (email: string, password: string) => {
     try {
+      loading.value = true
       const response = await request.post('/account/login/', {
         email,
         password
       })
       user.value = response.data.user;
+      loading.value = false
       router.push(returnUrl.value || '/dashboard/default');
     } catch (error: any) {
-      console.log('cai no catch')
+      loading.value = false
       const erro = error as AxiosError
       hasError.value = true
       if(erro.status === 400) {
@@ -56,6 +59,7 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     returnUrl,
     hasError,
+    loading,
     apiError,
     login,
     fetchUserData,
