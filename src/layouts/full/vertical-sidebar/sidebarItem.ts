@@ -102,7 +102,7 @@ const sidebarItem: menu[] = [
   {
     title: 'Documentation',
     icon: HelpIcon,
-    to: 'https://codedthemes.gitbook.io/berry-vuetify/',
+    to: '#',
     type: 'external'
   }
 ];
