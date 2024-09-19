@@ -1,8 +1,8 @@
 {
-  "name": "nutri",
+  "name": "simplediet",
   "version": "1.0.0",
   "private": true,
-  "author": "Todos",
+  "author": "SimpleDiet",
   "type": "module",
   "scripts": {
     "dev": "vite",
