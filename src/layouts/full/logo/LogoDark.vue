@@ -1,7 +1,7 @@
 <template>
   <div class="logo">
     <RouterLink to="/">
-      <svg id="a" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="112" height="52" viewBox="0 0 67 29.24">
+      <svg id="a" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="112" height="52" viewBox="0 0 80 29.24">
         <defs>
           <clipPath id="b">
             <path
