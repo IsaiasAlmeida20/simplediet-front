@@ -77,7 +77,7 @@ function validate(values: any, { setErrors }: any) {
         <a href="javascript:void(0)" class="text-primary text-decoration-none">Esqueceu sua senha?</a>
       </div>
     </div>
-    <v-btn color="secondary" :loading="isSubmitting" block class="mt-2" variant="flat" size="large" :disabled="valid" type="submit">
+    <v-btn color="secondary" :loading="isSubmitting" block class="mt-5" variant="flat" size="large" :disabled="valid" type="submit">
       Entrar</v-btn
     >
     <div v-if="errors.apiError" class="mt-2">
@@ -85,7 +85,6 @@ function validate(values: any, { setErrors }: any) {
     </div>
   </Form>
   <div class="mt-5 text-right">
-    <v-divider />
     <v-btn variant="plain" to="/auth/register" class="mt-2 text-capitalize mr-n2">Não possui conta?</v-btn>
   </div>
 </template>

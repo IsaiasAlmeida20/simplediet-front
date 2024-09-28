@@ -75,6 +75,7 @@ function validate() {
           persistent-hint
           return-object
           single-line
+          hide-details
         >
         </v-select>
       </v-col>
@@ -96,7 +97,7 @@ function validate() {
       density="comfortable"
       hide-details="auto"
       variant="outlined"
-      class="mb-4"
+      class="my-4"
       color="primary"
       label="CPF"
       :rules="cpfRules"
@@ -167,10 +168,9 @@ function validate() {
       ></v-checkbox>
       <a href="#" class="ml-1 text-lightText">Termos e condições</a>
     </div>
-    <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="validate()">Registrar-se</v-btn>
+    <v-btn color="secondary" block class="mt-5" variant="flat" size="large" @click="validate()">Registrar-se</v-btn>
   </v-form>
   <div class="mt-5 text-right">
-    <v-divider />
     <v-btn variant="plain" to="/auth/login" class="mt-2 text-capitalize mr-n2">Já possui uma conta?</v-btn>
   </div>
 </template>
