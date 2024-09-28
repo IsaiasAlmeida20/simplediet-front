@@ -1,19 +1,46 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Google from '@/assets/images/auth/social-google.svg';
-const checkbox = ref(false);
+const acceptc_terms = ref(false);
 const show1 = ref(false);
 const password = ref('');
 const passwordTwo = ref('');
 const email = ref('');
 const Regform = ref();
-const firstname = ref('');
-const lastname = ref('');
+const username = ref('');
+const cpf = ref('');
+const phone_number = ref('');
+
+const select = ref();
+const items = [
+  { state: 'Dr.', abbr: 'Dr.' },
+  { state: 'Dra.', abbr: 'Dra.' },
+  { state: 'Nutri', abbr: 'Nutri' },
+  { state: 'Aluno(a)', abbr: 'Aluno(a)' }
+];
+
 const passwordRules = ref([
-  (v: string) => !!v || 'Password is required',
-  (v: string) => (v && v.length <= 10) || 'Password must be less than 10 characters'
+  (v: string) => !!v || 'Senha é obriagtoria',
+  (v: string) => (v && v.length <= 10) || 'Senha precisa ser maior que 10 caracters'
 ]);
-const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid']);
+
+const cpfRules = ref([
+  (v: string) => !!v || 'CPF é obriagtorio',
+]);
+
+const usernameRules = ref([
+  (v: string) => !!v || 'Nome é obriagtorio',
+]);
+
+const phoneNumberRules = ref([
+  (v: string) => !!v || 'Telefone é obriagtorio',
+]);
+
+
+const emailRules = ref([
+  (v: string) => !!v || 'E-mail é obrigatorio', 
+  (v: string) => /.+@.+\..+/.test(v) || 'E-mail precisa ser valido']
+);
 
 function validate() {
   Regform.value.validate();
@@ -21,7 +48,7 @@ function validate() {
 </script>
 
 <template>
-  <v-btn block color="primary" variant="outlined" class="text-lightText googleBtn">
+  <!-- <v-btn block color="primary" variant="outlined" class="text-lightText googleBtn">
     <img :src="Google" alt="google" />
     <span class="ml-2">Registre-se com Google</span></v-btn
   >
@@ -32,30 +59,60 @@ function validate() {
       <v-divider class="custom-devider" />
     </v-col>
   </v-row>
-  <h5 class="text-h5 text-center my-4 mb-8">Registre-se com Email</h5>
+  <h5 class="text-h5 text-center my-4 mb-8">Registre-se com Email</h5> -->
   <v-form ref="Regform" lazy-validation action="/dashboards/analytical" class="mt-7 loginForm">
     <v-row>
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="firstname"
-          density="comfortable"
-          hide-details="auto"
-          variant="outlined"
+      <v-col cols="12" sm="5">
+        <v-select
           color="primary"
-          label="Nome"
-        ></v-text-field>
+          variant="outlined"
+          v-model="select"
+          :items="items"
+          item-title="state"
+          item-value="abbr"
+          label="Tratamento"
+          density="comfortable"
+          persistent-hint
+          return-object
+          single-line
+        >
+        </v-select>
       </v-col>
-      <v-col cols="12" sm="6">
+      <v-col cols="12" sm="7">
         <v-text-field
-          v-model="lastname"
+          v-model="username"
           density="comfortable"
           hide-details="auto"
           variant="outlined"
           color="primary"
-          label="Sobrenome"
+          label="Nome completo"
+          :rules="usernameRules"
         ></v-text-field>
       </v-col>
     </v-row>
+
+    <v-text-field
+      v-model="cpf"
+      density="comfortable"
+      hide-details="auto"
+      variant="outlined"
+      class="mb-4"
+      color="primary"
+      label="CPF"
+      :rules="cpfRules"
+    ></v-text-field>
+
+    <v-text-field
+      v-model="phone_number"
+      density="comfortable"
+      hide-details="auto"
+      variant="outlined"
+      class="my-4"
+      color="primary"
+      label="Telefone"
+      :rules="phoneNumberRules"
+    ></v-text-field>
+      
     <v-text-field
       v-model="email"
       :rules="emailRules"
@@ -100,8 +157,8 @@ function validate() {
 
     <div class="d-sm-inline-flex align-center mt-2 mb-7 mb-sm-0 font-weight-bold">
       <v-checkbox
-        v-model="checkbox"
-        :rules="[(v: any) => !!v || 'You must agree to continue!']"
+        v-model="acceptc_terms"
+        :rules="[(v: any) => !!v || 'Você precisa aceitar para continuar!']"
         label="Concorda com?"
         required
         color="primary"
