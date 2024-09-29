@@ -1,21 +1,21 @@
-import { defineStore } from 'pinia';
+// import { defineStore } from 'pinia';
 
-import { fetchWrapper } from '@/utils/helpers/fetch-wrapper';
+// import { fetchWrapper } from '@/utils/helpers/fetch-wrapper';
 
-const baseUrl = `${import.meta.env.VITE_API_URL}/users`;
+// const baseUrl = `${import.meta.env.VITE_API_URL}/users`;
 
-export const useUserStore = defineStore({
-  id: 'Authuser',
-  state: () => ({
-    users: {}
-  }),
-  actions: {
-    async getAll() {
-      this.users = { loading: true };
-      fetchWrapper
-        .get(baseUrl)
-        .then((users) => (this.users = users))
-        .catch((error) => (this.users = { error }));
-    }
-  }
-});
+// export const useUserStore = defineStore({
+//   id: 'Authuser',
+//   state: () => ({
+//     users: {}
+//   }),
+//   actions: {
+//     async getAll() {
+//       this.users = { loading: true };
+//       fetchWrapper
+//         .get(baseUrl)
+//         .then((users) => (this.users = users))
+//         .catch((error) => (this.users = { error }));
+//     }
+//   }
+// });

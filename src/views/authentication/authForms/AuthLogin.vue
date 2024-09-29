@@ -11,7 +11,7 @@
     </v-col>
   </v-row>
   <h5 class="text-h5 text-center my-4 mb-8">Entrar com Email</h5> -->
-  <Form @submit="validate" class="mt-7 loginForm" v-slot="{ errors, isSubmitting }">
+  <v-form @submit.prevent="validate" class="mt-7 loginForm" ref="form">
     <v-text-field
       v-model="email"
       :rules="emailRules"
@@ -43,13 +43,17 @@
         <a href="javascript:void(0)" class="text-primary text-decoration-none">Esqueceu sua senha?</a>
       </div>
     </div>
-    <v-btn color="secondary" :loading="isSubmitting" block class="mt-5" variant="flat" size="large" :disabled="valid" type="submit">
+    <v-btn color="secondary" block class="mt-5" variant="flat" size="large" :disabled="valid" type="submit">
       Entrar</v-btn
     >
-    <div v-if="errors.apiError" class="mt-2">
-      <v-alert color="error">{{ errors.apiError }}</v-alert>
+    <div v-if="hasError" class="mt-2">
+      <v-alert color="error" closable @click:close="hasError = false">
+        <span v-for="erro in apiError">
+          {{ erro[0] }}
+        </span>
+      </v-alert>
     </div>
-  </Form>
+  </v-form>
   <div class="mt-5 text-right">
     <v-btn variant="plain" to="/auth/register" class="mt-2 text-capitalize mr-n2">Não possui conta?</v-btn>
   </div>
@@ -57,33 +61,35 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import Google from '@/assets/images/auth/social-google.svg';
 import { useAuthStore } from '@/stores/auth';
-import { Form } from 'vee-validate';
-import request from '@/services/axios'
+
+const authStore = useAuthStore();
+const { hasError, apiError } = storeToRefs(authStore);
+
 
 const checkbox = ref(false);
 const valid = ref(false);
 const show1 = ref(false);
-//const logform = ref();
+const form = ref();
 const email = ref('isaias@example.com');
 const password = ref('badrequest');
+
 const passwordRules = ref([
   (v: string) => !!v || 'Senha é obrigatoria',
 ]);
+
 const emailRules = ref([
   (v: string) => !!v || 'E-mail is required', 
   (v: string) => /.+@.+\..+/.test(v) || 'E-mail precisa ser válido'
 ]);
 
 async function validate() {
-  // const authStore = useAuthStore();
-  // return authStore.login(email.value, password.value).catch((error) => setErrors({ apiError: error }));
-  const response = await request.post('/account/login/', {
-    'email': email.value,
-    'password': password.value
-  })
-  console.log(response)
+  const { valid } = await form.value.validate()
+  if(valid) {
+    return authStore.login(email.value, password.value);
+  }
 }
 </script>
 

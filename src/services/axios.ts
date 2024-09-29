@@ -1,7 +1,5 @@
 import axios, { HttpStatusCode } from 'axios'
-
-// stores
-import { useUserStore } from '@/stores/authUser'
+import { useAuthStore } from '@/stores/auth'
 
 const production = import.meta.env.MODE === 'production'
 const BASE_URL = production ? 'https://simplediet.com.br/api/' : import.meta.env.VITE_API_URL
@@ -10,24 +8,25 @@ const URL = production ? 'https://simplediet.com.br/login' : 'http://127.0.0.1:8
 const instance = axios.create({
 	baseURL: BASE_URL,
 	withCredentials: true,
+	headers: {
+		'Content-Type': 'application/json',
+	}
 })
 
 const refreshAccessToken = async () => {
-	const response = await instance.post('/token/refresh/')
+	const response = await instance.post('/account/token/refresh/')
 	return response.data
 }
 
 instance.defaults.headers.common['Content-Type'] = 'application/json'
 
 instance.interceptors.response.use(response => response, async (error) => {
-	const userStore = useUserStore()
+	const auth = useAuthStore()
 	const originalRequest = error.config
 	const errorReponse = error.response
 	const detail = errorReponse?.data?.detail
 	if (detail === "No valid refresh token found.") {
-		window.location.href = URL
-		localStorage.setItem('isAuthenticated', 'false')
-		userStore.$reset()
+		auth.logout()
 		return
 	}
 
