@@ -1,13 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-import { SettingsIcon, LogoutIcon, UserIcon } from 'vue-tabler-icons';
-import { useAuthStore } from '@/stores/auth';
-
-const swt1 = ref(true);
-const swt2 = ref(false);
-const authStore = useAuthStore();
-</script>
-
 <template>
   <!-- ---------------------------------------------- -->
   <!-- profile DD -->
@@ -81,3 +71,14 @@ const authStore = useAuthStore();
     </perfect-scrollbar>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { SettingsIcon, LogoutIcon, UserIcon } from 'vue-tabler-icons';
+import { useAuthStore } from '@/stores/auth';
+
+const swt1 = ref(true);
+const swt2 = ref(false);
+const authStore = useAuthStore();
+</script>
+
