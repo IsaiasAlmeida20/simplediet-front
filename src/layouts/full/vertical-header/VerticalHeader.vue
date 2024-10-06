@@ -1,21 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useCustomizerStore } from '../../../stores/customizer';
-// Icon Imports
-import { BellIcon, SettingsIcon, SearchIcon, Menu2Icon } from 'vue-tabler-icons';
-
-// dropdown imports
-import NotificationDD from './NotificationDD.vue';
-import ProfileDD from './ProfileDD.vue';
-import Searchbar from './SearchBarPanel.vue';
-
-const customizer = useCustomizerStore();
-const showSearch = ref(false);
-function searchbox() {
-  showSearch.value = !showSearch.value;
-}
-</script>
-
 <template>
   <v-app-bar elevation="0" height="80">
     <v-btn
@@ -104,3 +86,21 @@ function searchbox() {
     </v-menu>
   </v-app-bar>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useCustomizerStore } from '../../../stores/customizer';
+// Icon Imports
+import { BellIcon, SettingsIcon, SearchIcon, Menu2Icon } from 'vue-tabler-icons';
+
+// dropdown imports
+import NotificationDD from './NotificationDD.vue';
+import ProfileDD from './ProfileDD.vue';
+import Searchbar from './SearchBarPanel.vue';
+
+const customizer = useCustomizerStore();
+const showSearch = ref(false);
+function searchbox() {
+  showSearch.value = !showSearch.value;
+}
+</script>
