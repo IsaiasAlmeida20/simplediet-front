@@ -3,22 +3,26 @@
   <!-- profile DD -->
   <!-- ---------------------------------------------- -->
   <div class="pa-4">
-    <h4 class="mb-n1">Good Morning, <span class="font-weight-regular">John Doe</span></h4>
-    <span class="text-subtitle-2 text-medium-emphasis">Project admin</span>
+    <h4 class="mb-n1">Olá, 
+      <span >
+        {{ user?.treatment }} {{ user?.username }}
+      </span>
+    </h4>
+    <!-- <span class="text-subtitle-2 text-medium-emphasis">Project admin</span> -->
 
-    <v-text-field persistent-placeholder placeholder="Search" class="my-3" color="primary" variant="outlined" hide-details>
+    <!-- <v-text-field persistent-placeholder placeholder="Search" class="my-3" color="primary" variant="outlined" hide-details>
       <template v-slot:prepend-inner>
         <SearchIcon stroke-width="1.5" size="20" class="text-lightText SearchIcon" />
       </template>
     </v-text-field>
 
-    <v-divider></v-divider>
+    <v-divider></v-divider> -->
     <perfect-scrollbar style="height: calc(100vh - 300px); max-height: 515px">
       <!-- <div class="bg-lightwarning rounded-md pa-5 my-3 circle sm-circle lg-circle">
         <h4>Upgrade your plan</h4>
         <h6 class="text-subtitle-2 text-medium-emphasis mr-11 pr-11 mb-3 mt-2">70% discount for 1 years subscriptions.</h6>
         <v-btn color="warning" variant="flat"> Go Premium </v-btn>
-      </div> -->
+      </div>
 
       <v-divider></v-divider>
 
@@ -37,7 +41,7 @@
         </div>
       </div>
 
-      <v-divider></v-divider>
+      <v-divider></v-divider> -->
 
       <v-list class="mt-3">
         <v-list-item color="secondary" rounded="md">
@@ -74,11 +78,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import { SettingsIcon, LogoutIcon, UserIcon } from 'vue-tabler-icons';
 import { useAuthStore } from '@/stores/auth';
 
 const swt1 = ref(true);
 const swt2 = ref(false);
 const authStore = useAuthStore();
+const { user } = storeToRefs(authStore)
 </script>
 
