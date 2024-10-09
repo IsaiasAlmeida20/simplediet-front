@@ -14,34 +14,42 @@
   <v-form ref="Regform" lazy-validation action="/dashboards/analytical" class="mt-7 loginForm">
     <v-row>
       <v-col cols="12" sm="5">
-        <v-select
-          color="primary"
-          variant="outlined"
-          v-model="treatment"
-          :items="items"
-          item-title="state"
-          item-value="abbr"
-          label="Tratamento"
-          density="comfortable"
-          persistent-hint
-          return-object
-          single-line
-          hide-details
-        >
-        </v-select>
-      </v-col>
-      <v-col cols="12" sm="7">
         <v-text-field
-          v-model="username"
+          v-model="first_name"
           density="comfortable"
           hide-details="auto"
           variant="outlined"
           color="primary"
-          label="Nome completo"
-          :rules="usernameRules"
+          label="Nome"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="7">
+        <v-text-field
+          v-model="last_name"
+          density="comfortable"
+          hide-details="auto"
+          variant="outlined"
+          color="primary"
+          label="Sobrenome"
         ></v-text-field>
       </v-col>
     </v-row>
+
+    <v-select
+      class="my-4"
+      color="primary"
+      variant="outlined"
+      v-model="treatment"
+      :items="items"
+      item-title="state"
+      item-value="abbr"
+      label="Tratamento"
+      density="comfortable"
+      persistent-hint
+      return-object
+      single-line
+      hide-details
+    ></v-select>
 
     <v-text-field
       v-model="cpf"
@@ -79,7 +87,7 @@
 
     <v-text-field
       v-model="password1"
-      :rules="passwordRules"
+      :rules="password1Rules"
       label="Senha"
       required
       density="comfortable"
@@ -139,16 +147,14 @@ import { router } from '@/router';
 import request from '@/services/axios';
 
 // Types
-import type { User } from '@/types/common/index'
 import type { AxiosError } from 'axios';
-
-
 
 const accept_terms = ref(false);
 const show1 = ref(false);
 const Regform = ref();
 const email = ref('');
-const username = ref('');
+const first_name = ref('');
+const last_name = ref('');
 const treatment = ref();
 const cpf = ref('');
 const password1 = ref('');
@@ -166,17 +172,17 @@ const items = [
   'Aluno(a)' 
 ];
 
-const passwordRules = ref([
-  (v: string) => !!v || 'Senha é obriagtoria',
-  (v: string) => (v && v.length <= 10) || 'Senha precisa ser maior que 10 caracters'
-]);
+const passwordRules = [
+    (value: any) => !!value || 'Senha é obrigatoria',
+    (value: any) => value ===  password1.value || 'As senhas não correspondem',
+]
+
+const password1Rules = [
+    (value: string) => value.length >=   8 || 'A senha precisa ter no minimo 8 caracteres',
+]
 
 const cpfRules = ref([
   (v: string) => !!v || 'CPF é obriagtorio',
-]);
-
-const usernameRules = ref([
-  (v: string) => !!v || 'Nome é obriagtorio',
 ]);
 
 const phoneNumberRules = ref([
@@ -195,18 +201,19 @@ async function validate() {
   
     try {
       loading.value = true
-      const response = await request.post('/account/registration/', {
+      await request.post('/account/registration/', {
         'email': email.value,
         'password1': password1.value,
         'password2':password2.value,
-        'username': username.value,
+        'first_name': first_name.value,
+        'last_name': last_name.value,
         'treatment': treatment.value,
         'cpf': cpf.value,
         'accept_terms': accept_terms.value,
         'phone_number': phone_number.value
       })
-      loading.value = false
       router.push({name: 'Login'});
+      loading.value = false
     } catch (error: any) {
       loading.value = false
       const erro = error as AxiosError

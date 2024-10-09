@@ -8,6 +8,8 @@ const URL = production ? 'https://simplediet.com.br/login' : 'http://127.0.0.1:8
 const instance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true, // Enviar cookies automaticamente
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: 'X-CSRFToken',
   headers: {
     'Content-Type': 'application/json',
   }
