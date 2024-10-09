@@ -2,7 +2,7 @@ import axios, { HttpStatusCode } from 'axios'
 import { useAuthStore } from '@/stores/auth'
 
 const production = import.meta.env.MODE === 'production'
-const BASE_URL = production ? 'https://simplediet-back.onrender.com/api/' : import.meta.env.VITE_API_URL
+const BASE_URL = production ? 'https://simplediet-back.onrender.com/' : import.meta.env.VITE_API_URL
 const URL = production ? 'https://simplediet.com.br/login' : 'http://127.0.0.1:8080/login'
 
 const instance = axios.create({
