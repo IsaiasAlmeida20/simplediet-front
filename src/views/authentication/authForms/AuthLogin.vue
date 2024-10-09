@@ -73,8 +73,8 @@ const checkbox = ref(false);
 const valid = ref(false);
 const show1 = ref(false);
 const form = ref();
-const email = ref('isaias@example.com');
-const password = ref('badrequest');
+const email = ref('');
+const password = ref('');
 
 const passwordRules = ref([
   (v: string) => !!v || 'Senha é obrigatoria',

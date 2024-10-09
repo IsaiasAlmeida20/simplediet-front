@@ -1,52 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-import Google from '@/assets/images/auth/social-google.svg';
-const acceptc_terms = ref(false);
-const show1 = ref(false);
-const password = ref('');
-const passwordTwo = ref('');
-const email = ref('');
-const Regform = ref();
-const username = ref('');
-const cpf = ref('');
-const phone_number = ref('');
-
-const select = ref();
-const items = [
-  { state: 'Dr.', abbr: 'Dr.' },
-  { state: 'Dra.', abbr: 'Dra.' },
-  { state: 'Nutri', abbr: 'Nutri' },
-  { state: 'Aluno(a)', abbr: 'Aluno(a)' }
-];
-
-const passwordRules = ref([
-  (v: string) => !!v || 'Senha é obriagtoria',
-  (v: string) => (v && v.length <= 10) || 'Senha precisa ser maior que 10 caracters'
-]);
-
-const cpfRules = ref([
-  (v: string) => !!v || 'CPF é obriagtorio',
-]);
-
-const usernameRules = ref([
-  (v: string) => !!v || 'Nome é obriagtorio',
-]);
-
-const phoneNumberRules = ref([
-  (v: string) => !!v || 'Telefone é obriagtorio',
-]);
-
-
-const emailRules = ref([
-  (v: string) => !!v || 'E-mail é obrigatorio', 
-  (v: string) => /.+@.+\..+/.test(v) || 'E-mail precisa ser valido']
-);
-
-function validate() {
-  Regform.value.validate();
-}
-</script>
-
 <template>
   <!-- <v-btn block color="primary" variant="outlined" class="text-lightText googleBtn">
     <img :src="Google" alt="google" />
@@ -66,7 +17,7 @@ function validate() {
         <v-select
           color="primary"
           variant="outlined"
-          v-model="select"
+          v-model="treatment"
           :items="items"
           item-title="state"
           item-value="abbr"
@@ -127,7 +78,7 @@ function validate() {
     ></v-text-field>
 
     <v-text-field
-      v-model="password"
+      v-model="password1"
       :rules="passwordRules"
       label="Senha"
       required
@@ -142,7 +93,7 @@ function validate() {
     ></v-text-field>
 
     <v-text-field
-      v-model="passwordTwo"
+      v-model="password2"
       :rules="passwordRules"
       label="Confirme sua senha"
       required
@@ -158,7 +109,7 @@ function validate() {
 
     <div class="d-sm-inline-flex align-center mt-2 mb-7 mb-sm-0 font-weight-bold">
       <v-checkbox
-        v-model="acceptc_terms"
+        v-model="accept_terms"
         :rules="[(v: any) => !!v || 'Você precisa aceitar para continuar!']"
         label="Concorda com?"
         required
@@ -168,12 +119,107 @@ function validate() {
       ></v-checkbox>
       <a href="#" class="ml-1 text-lightText">Termos e condições</a>
     </div>
-    <v-btn color="secondary" block class="mt-5" variant="flat" size="large" @click="validate()">Registrar-se</v-btn>
+    <v-btn color="secondary" :loading="loading" block class="mt-5" variant="flat" size="large" @click="validate()">Registrar-se</v-btn>
+    <div v-if="hasError" class="mt-2">
+      <v-alert color="error" closable @click:close="hasError = false">
+        <span v-for="erro in apiError">
+          {{ erro[0] }}
+        </span>
+      </v-alert>
+    </div>
   </v-form>
   <div class="mt-5 text-right">
     <v-btn variant="plain" to="/auth/login" class="mt-2 text-capitalize mr-n2">Já possui uma conta?</v-btn>
   </div>
 </template>
+<script setup lang="ts">
+import { ref } from 'vue';
+import Google from '@/assets/images/auth/social-google.svg';
+import { router } from '@/router';
+import request from '@/services/axios';
+
+// Types
+import type { User } from '@/types/common/index'
+import type { AxiosError } from 'axios';
+
+
+
+const accept_terms = ref(false);
+const show1 = ref(false);
+const Regform = ref();
+const email = ref('');
+const username = ref('');
+const treatment = ref();
+const cpf = ref('');
+const password1 = ref('');
+const password2 = ref('');
+const phone_number = ref('');
+
+const hasError = ref(false)
+const loading = ref(false)
+const apiError = ref()
+
+const items = [
+  'Dr.',
+  'Dra.',
+  'Nutri',
+  'Aluno(a)' 
+];
+
+const passwordRules = ref([
+  (v: string) => !!v || 'Senha é obriagtoria',
+  (v: string) => (v && v.length <= 10) || 'Senha precisa ser maior que 10 caracters'
+]);
+
+const cpfRules = ref([
+  (v: string) => !!v || 'CPF é obriagtorio',
+]);
+
+const usernameRules = ref([
+  (v: string) => !!v || 'Nome é obriagtorio',
+]);
+
+const phoneNumberRules = ref([
+  (v: string) => !!v || 'Telefone é obriagtorio',
+]);
+
+
+const emailRules = ref([
+  (v: string) => !!v || 'E-mail é obrigatorio', 
+  (v: string) => /.+@.+\..+/.test(v) || 'E-mail precisa ser valido']
+);
+
+async function validate() {
+  const { valid } = await Regform.value.validate();
+  if(valid) {
+  
+    try {
+      loading.value = true
+      const response = await request.post('/account/registration/', {
+        'email': email.value,
+        'password1': password1.value,
+        'password2':password2.value,
+        'username': username.value,
+        'treatment': treatment.value,
+        'cpf': cpf.value,
+        'accept_terms': accept_terms.value,
+        'phone_number': phone_number.value
+      })
+      loading.value = false
+      router.push({name: 'Login'});
+    } catch (error: any) {
+      loading.value = false
+      const erro = error as AxiosError
+      hasError.value = true
+      if(erro.status === 400) {
+        apiError.value = erro.response?.data
+      } else {
+        apiError.value = `Erro desconhecido, tente novamente mais tarde. status: ${erro.status}`
+      }
+    }
+  }
+}
+</script>
 <style lang="scss">
 .custom-devider {
   border-color: rgba(0, 0, 0, 0.08) !important;
