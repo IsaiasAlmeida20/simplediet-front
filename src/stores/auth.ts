@@ -25,6 +25,8 @@ export const useAuthStore = defineStore('auth', () => {
         password
       })
       user.value = response.data.user;
+      localStorage.setItem("access_token", response.data.access)
+      localStorage.setItem("refresh_token", response.data.refresh)
       loading.value = false
       router.push(returnUrl.value || '/dashboard/default');
     } catch (error: any) {
@@ -41,8 +43,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await request.get('/account/user/')
-      user.value = response.data.user;
+      const response = await request.get<User>('/account/user/')
+      user.value = response.data
     } catch (error) {
       const erro = error as AxiosError
       console.error(erro)
@@ -51,6 +53,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const logout = async () => {
     await request.post('/account/logout/')
+    localStorage.removeItem("access_token")
+    localStorage.removeItem("refresh_token")
     user.value = undefined
     router.push('/auth/login');
   }
