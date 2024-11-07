@@ -17,10 +17,13 @@ export const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/auth/login'];
+  const publicPages = ['/auth/login', '/auth/register'];
   const authRequired = !publicPages.includes(to.path);
   const auth = useAuthStore();
-  await auth.fetchUserData()
+  
+  if(authRequired) {
+    await auth.fetchUserData()
+  }
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (authRequired && !auth.user) {
